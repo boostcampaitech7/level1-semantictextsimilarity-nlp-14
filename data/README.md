@@ -33,4 +33,4 @@ label 값이 2.5 이상일 때 1, 미만이면 0으로 세팅
 
 ### data type
 * sampled : 샘플링된 데이터
-* rtt : real-time-text 데이터
+* rtt : round-trip translation

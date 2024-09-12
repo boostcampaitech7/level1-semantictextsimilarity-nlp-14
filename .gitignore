@@ -3,15 +3,10 @@
 
 #
 model.pt
-<<<<<<< HEAD
-
-#
-./data/raw/*.csv
-=======
 *.csv
-#
+
+
 #./data/raw/*.csv
->>>>>>> 3c976f0 (baseline init)
 
 #
 ./data/inference/*.csv

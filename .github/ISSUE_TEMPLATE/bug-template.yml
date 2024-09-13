@@ -16,7 +16,6 @@ body:
     attributes:
       label: 문제 상황 재현 방법
       description: 문제를 재현할 수 있는 대한 설명
-      placeholder: |
     validations:
       required: true
   - type: input

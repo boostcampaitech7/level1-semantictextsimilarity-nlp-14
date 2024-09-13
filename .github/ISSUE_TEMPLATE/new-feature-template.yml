@@ -1,7 +1,7 @@
 name: New Feature
 description: 새로운 기능 추가 논의🪄
 title: "[New Feature]"
-labels: ["feature"]
+labels: ["enhancement"]
 body:
   - type: textarea
     id: feature-summary

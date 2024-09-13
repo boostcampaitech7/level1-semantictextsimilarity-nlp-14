@@ -32,12 +32,13 @@ if __name__ == '__main__':
     with open('baselines/baseline_config.yaml') as f:
         CFG = yaml.load(f, Loader=yaml.FullLoader)
 
-    # inference에 쓸 모델 불러오기(experiments 폴더에서)
+    # inference에 쓸 모델 불러오기(CFG로 참조)
+    model_path = CFG['inference']['model_path']
 
 
     # dataloader / model 설정
     dataloader = data_pipeline.Dataloader(CFG, args.train_path, args.dev_path, args.test_path, args.predict_path)
-    model = torch.load('./experiments/09-12_16_eyeol/model.pt')
+    model = torch.load(model_path)
 
     # trainer 인스턴스 생성
     trainer = pl.Trainer(accelerator="gpu", devices=1, max_epochs=CFG['train']['epoch'], log_every_n_steps=1)

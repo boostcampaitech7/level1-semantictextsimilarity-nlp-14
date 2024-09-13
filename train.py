@@ -9,7 +9,7 @@ import torch
 import pytorch_lightning as pl
 #import wandb
 ##############################
-from utils import data_pipeline, utils
+from utils import data_pipeline, tools
 from model.model import Model
 ##############################
 
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     
     # experiments 폴더 내부에 실험 폴더 생성
     # 폴더 이름 : 실험 날짜 - 실험 시간 - admin
-    experiment_path = utils.create_experiment_folder(CFG)
+    experiment_path = tools.create_experiment_folder(CFG)
 
 
     # dataloader / model 설정

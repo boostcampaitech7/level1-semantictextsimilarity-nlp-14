@@ -12,3 +12,5 @@ train:
   optim: torch.optim.AdamW
   ## LossF와 optim은 torch.nn과 torch.optim을 꼭 적어야 합니다
   shuffle: True
+inference:
+  model_path: ./experiments/09-12_16_eyeol/model.pt

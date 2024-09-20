@@ -40,8 +40,14 @@ if __name__ == '__main__':
     dataloader = data_pipeline.Dataloader(CFG, args.train_path, args.dev_path, args.test_path, args.predict_path)
     model = torch.load(model_path)
 
+    
+    early_stopping_callbacks = pl.callbacks.EarlyStopping(
+    monitor=CFG['early_stopping']['monitor'],
+    patience=CFG['early_stopping']['patience'],
+    mode=CFG['early_stopping']['mode'])
+
     # trainer 인스턴스 생성
-    trainer = pl.Trainer(accelerator="gpu", devices=1, max_epochs=CFG['train']['epoch'], log_every_n_steps=1)
+    trainer = pl.Trainer(accelerator="gpu", devices=1, callbacks=[early_stopping_callbacks], max_epochs=CFG['train']['epoch'], log_every_n_steps=1)
 
      # Inference part
     predictions = trainer.predict(model=model, datamodule=dataloader)

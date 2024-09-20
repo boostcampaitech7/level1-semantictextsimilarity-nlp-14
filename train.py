@@ -34,12 +34,21 @@ if __name__ == "__main__":
     experiment_path = tools.create_experiment_folder(CFG)
 
 
+
+
+
+
     # dataloader / model 설정
     dataloader = data_pipeline.Dataloader(CFG, args.train_path, args.dev_path, args.test_path, args.predict_path)
     model = Model(CFG)
 
+    early_stopping_callbacks = pl.callbacks.EarlyStopping(
+    monitor=CFG['early_stopping']['monitor'],
+    patience=CFG['early_stopping']['patience'],
+    mode=CFG['early_stopping']['mode'])
+
     # trainer 인스턴스 생성
-    trainer = pl.Trainer(accelerator="gpu", devices=1, max_epochs=CFG['train']['epoch'], log_every_n_steps=1)
+    trainer = pl.Trainer(accelerator="gpu", devices=1, callbacks=[early_stopping_callbacks], max_epochs=CFG['train']['epoch'], log_every_n_steps=1)
 
     # Train part
     trainer.fit(model=model, datamodule=dataloader)

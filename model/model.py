@@ -23,7 +23,7 @@ class Model(pl.LightningModule):
         self.num_hiddens=CFG['train']['num_hiddens']
         self.num_warmup_rate=CFG['scheduler']['num_warmup_rate']
         
-        
+        #단순한 선형 레이어를 추가해 모델의 학습과정에서 비선형성을 추가로 배울 수 있도록함. 
         self.linear = nn.Linear(self.num_hiddens,1)
         self.gelu = nn.GELU()
         self.dropout = nn.Dropout(CFG['train']['dropout'])

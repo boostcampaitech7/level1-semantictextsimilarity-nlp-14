@@ -111,7 +111,7 @@ class Model(pl.LightningModule):
             num_training_steps=total_steps
             )
     
-        scheduler = {
+        scheduler_config = {
             'scheduler': scheduler,
             'interval': self.step,  # 매 배치마다 업데이트
             'frequency': self.freq       # 매 interval마다

@@ -117,4 +117,4 @@ class Model(pl.LightningModule):
             'frequency': self.freq       # 매 interval마다
         }
     
-        return [optimizer], [scheduler]
+        return [optimizer], [scheduler_config]

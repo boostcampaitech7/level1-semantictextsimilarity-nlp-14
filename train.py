@@ -33,7 +33,8 @@ if __name__ == "__main__":
     # 폴더 이름 : 실험 날짜 - 실험 시간 - admin
     experiment_path = tools.create_experiment_folder(CFG)
     # dataloader / model 설정
-    init_seed = tools.init_seed(CFG)
+    seed_num = CFG['seed']
+    init_seed = tools.init_seed(seed_num)
     dataloader = data_pipeline.Dataloader(CFG, args.train_path, args.dev_path, args.test_path, args.predict_path)
     model = Model(CFG)
 

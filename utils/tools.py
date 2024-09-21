@@ -23,9 +23,9 @@ def create_experiment_folder(CFG, base_path="./experiments"):
     
     return experiment_path
 
-def init_seed(CFG):
-    torch.manual_seed(CFG['seed'])
-    torch.cuda.manual_seed(CFG['seed'])
-    torch.cuda.manual_seed_all(CFG['seed'])
-    random.seed(CFG['seed'])
+def init_seed(x):
+    torch.manual_seed(x)
+    torch.cuda.manual_seed(x)
+    torch.cuda.manual_seed_all(x)
+    random.seed(x)
     

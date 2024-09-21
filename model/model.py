@@ -4,12 +4,9 @@ import torchmetrics
 import pytorch_lightning as pl
 import torch.nn as nn
 from transformers import get_linear_schedule_with_warmup
-import random
+from utils.tools import init_seed
 
-torch.manual_seed(0)
-torch.cuda.manual_seed(0)
-torch.cuda.manual_seed_all(0)
-random.seed(0)
+init_seed()
 
 class Model(pl.LightningModule):
     def __init__(self, CFG):

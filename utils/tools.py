@@ -1,3 +1,5 @@
+import torch
+import random
 import os
 from datetime import datetime
 
@@ -20,3 +22,11 @@ def create_experiment_folder(CFG, base_path="./experiments"):
     os.makedirs(experiment_path, exist_ok=True)
     
     return experiment_path
+
+def init_seed(CFG):
+    torch.manual_seed(CFG['seed'])
+    torch.cuda.manual_seed(CFG['seed'])
+    torch.cuda.manual_seed_all(CFG['seed'])
+    random.seed(CFG['seed'])
+
+    

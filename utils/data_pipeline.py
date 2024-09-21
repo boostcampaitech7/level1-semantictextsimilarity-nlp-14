@@ -5,12 +5,9 @@ import transformers
 import pandas as pd
 import pytorch_lightning as pl
 from torch.utils.data import Dataset, DataLoader
-import random
+from utils.tools import init_seed
 
-torch.manual_seed(0)
-torch.cuda.manual_seed(0)
-torch.cuda.manual_seed_all(0)
-random.seed(0)
+init_seed()
 
 class Dataset(torch.utils.data.Dataset):
     def __init__(self, inputs, targets=[]):

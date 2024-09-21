@@ -32,12 +32,6 @@ if __name__ == "__main__":
     # experiments 폴더 내부에 실험 폴더 생성
     # 폴더 이름 : 실험 날짜 - 실험 시간 - admin
     experiment_path = tools.create_experiment_folder(CFG)
-
-
-
-
-
-
     # dataloader / model 설정
     dataloader = data_pipeline.Dataloader(CFG, args.train_path, args.dev_path, args.test_path, args.predict_path)
     model = Model(CFG)

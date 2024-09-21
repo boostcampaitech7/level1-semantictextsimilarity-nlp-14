@@ -28,5 +28,4 @@ def init_seed(CFG):
     torch.cuda.manual_seed(CFG['seed'])
     torch.cuda.manual_seed_all(CFG['seed'])
     random.seed(CFG['seed'])
-
     

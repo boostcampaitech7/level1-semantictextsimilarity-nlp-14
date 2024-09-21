@@ -26,20 +26,25 @@ if __name__ == "__main__":
     args = parser.parse_args(args=[])
 
     # baseline_config 설정 불러오기
-    with open('baselines/baseline_config.yaml') as f:
+    with open('baselines/baseline_config.yaml',encoding='utf-8') as f:
         CFG = yaml.load(f, Loader=yaml.FullLoader)
     
     # experiments 폴더 내부에 실험 폴더 생성
     # 폴더 이름 : 실험 날짜 - 실험 시간 - admin
     experiment_path = tools.create_experiment_folder(CFG)
-
-
     # dataloader / model 설정
+    seed_num = CFG['seed']
+    init_seed = tools.init_seed(seed_num)
     dataloader = data_pipeline.Dataloader(CFG, args.train_path, args.dev_path, args.test_path, args.predict_path)
     model = Model(CFG)
 
+    early_stopping_callbacks = pl.callbacks.EarlyStopping(
+    monitor=CFG['early_stopping']['monitor'],
+    patience=CFG['early_stopping']['patience'],
+    mode=CFG['early_stopping']['mode'])
+
     # trainer 인스턴스 생성
-    trainer = pl.Trainer(accelerator="gpu", devices=1, max_epochs=CFG['train']['epoch'], log_every_n_steps=1)
+    trainer = pl.Trainer(accelerator="gpu", devices=1, callbacks=[early_stopping_callbacks], max_epochs=CFG['train']['epoch'], log_every_n_steps=1)
 
     # Train part
     trainer.fit(model=model, datamodule=dataloader)

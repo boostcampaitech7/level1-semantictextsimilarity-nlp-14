@@ -37,7 +37,7 @@ class Dataloader(pl.LightningDataModule):
         self.model_name = CFG['train']['model_name']
         self.batch_size = CFG['train']['batch_size']
         self.shuffle = CFG['train']['shuffle']
-        
+
         self.sampler=None
 
 
@@ -68,13 +68,15 @@ class Dataloader(pl.LightningDataModule):
         return data
     '''
     def tokenizing(self, dataframe):
+        #어텐션 마스크 추가 안했으나, 추가시 성능 높아질 확률 높음
         data = []
         for idx, item in tqdm(dataframe.iterrows(), desc='tokenizing', total=len(dataframe)):
         # 두 입력 문장을 [SEP] 토큰으로 이어붙여서 전처리합니다.
-            text = '[SEP]'.join([item[text_column] for text_column in self.text_columns])
-            # padding=True와 truncation=True 옵션을 명시적으로 추가합니다.
+
+            text = [item[text_column] for text_column in self.text_columns]
             outputs = self.tokenizer(
-                text,
+                text[0],
+                text[1],
                 add_special_tokens=True,
                 padding='max_length',  # max_length로 패딩을 고정
                 truncation=True,       # 텍스트를 최대 길이로 자름
@@ -101,6 +103,16 @@ class Dataloader(pl.LightningDataModule):
         if stage == 'fit':
             # 학습 데이터와 검증 데이터셋을 호출합니다
             train_data = pd.read_csv(self.train_path)
+            
+            #swap augmentation
+            inv_train = train_data.iloc[:, [0, 1, 3, 2, 4, 5]]
+            inv_train.columns = train_data.columns
+            train_data = pd.concat([train_data,inv_train], ignore_index=True)
+
+            #단순히 stack한거라 shuffle을 true로 하지 않으면 편향 생김
+            #seed 고정 안하고 훈련시 shuffle 바뀌어서 성능이 변경되어버림
+            train_data = pd.concat([train_data,train_data],ignore_index=True)
+            #
             val_data = pd.read_csv(self.dev_path)
 
             # 학습데이터 준비
@@ -123,7 +135,7 @@ class Dataloader(pl.LightningDataModule):
             self.predict_dataset = Dataset(predict_inputs, [])
 
     def train_dataloader(self):
-        return torch.utils.data.DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=False)#self.shuffle)
+        return torch.utils.data.DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=self.shuffle)#self.shuffle)
 
     def val_dataloader(self):
         return torch.utils.data.DataLoader(self.val_dataset, batch_size=self.batch_size)

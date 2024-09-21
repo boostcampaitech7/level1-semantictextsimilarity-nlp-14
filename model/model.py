@@ -4,9 +4,7 @@ import torchmetrics
 import pytorch_lightning as pl
 import torch.nn as nn
 from transformers import get_linear_schedule_with_warmup
-from utils.tools import init_seed
 
-init_seed()
 
 class Model(pl.LightningModule):
     def __init__(self, CFG):
@@ -18,15 +16,15 @@ class Model(pl.LightningModule):
         ## configure_optimizers에서 사용
         self.weight_decay = CFG['train']['weight_decay']
         self.num_hiddens=CFG['train']['num_hiddens']
-        self.num_warmup_rate=CFG['scheduler']['num_warmup_rate']
+        self.num_warmup_rate=CFG['LR_scheduler']['num_warmup_rate']
         
         #단순한 선형 레이어를 추가해 모델의 학습과정에서 비선형성을 추가로 배울 수 있도록함. 
         self.linear = nn.Linear(self.num_hiddens,1)
         self.gelu = nn.GELU()
         self.dropout = nn.Dropout(CFG['train']['dropout'])
         
-        self.step=CFG['scheduler']['LR_step_type']
-        self.freq=CFG['scheduler']['LR_step_freq']
+        self.step=CFG['LR_scheduler']['LR_step_type']
+        self.freq=CFG['LR_scheduler']['LR_step_freq']
 
         ## CFG에 설정된 lossF와 optim을 문자열로 저장
         loss_choice  = CFG['train']['LossF']

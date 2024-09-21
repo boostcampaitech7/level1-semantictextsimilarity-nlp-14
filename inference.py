@@ -13,7 +13,7 @@ import torch
 import pytorch_lightning as pl
 #import wandb
 ##############################
-from utils import data_pipeline
+from utils import data_pipeline, tools
 
 
 
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     args = parser.parse_args(args=[])
 
     # baseline_config 설정 불러오기
-    with open('baselines/baseline_config.yaml') as f:
+    with open('baselines/baseline_config.yaml',encoding='utf-8') as f:
         CFG = yaml.load(f, Loader=yaml.FullLoader)
 
     # inference에 쓸 모델 불러오기(CFG로 참조)
@@ -37,6 +37,7 @@ if __name__ == '__main__':
 
 
     # dataloader / model 설정
+    init_seed = tools.init_seed(CFG)
     dataloader = data_pipeline.Dataloader(CFG, args.train_path, args.dev_path, args.test_path, args.predict_path)
     model = torch.load(model_path)
 

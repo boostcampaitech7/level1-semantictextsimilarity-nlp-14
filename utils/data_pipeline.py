@@ -4,7 +4,6 @@ import torch
 import transformers
 import pandas as pd
 import pytorch_lightning as pl
-from torch.utils.data import Dataset
 
 
 class Dataset(torch.utils.data.Dataset):

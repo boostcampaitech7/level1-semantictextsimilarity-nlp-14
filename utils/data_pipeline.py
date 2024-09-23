@@ -32,7 +32,6 @@ class Dataloader(pl.LightningDataModule):
         # config
         self.model_name = CFG["train"]["model_name"]
         self.batch_size = CFG["train"]["batch_size"]
-        self.shuffle = CFG["train"]["shuffle"]
 
         self.train_path = train_path
         self.dev_path = dev_path
@@ -84,25 +83,25 @@ class Dataloader(pl.LightningDataModule):
     def setup(self, stage="fit"):
         if stage == "fit":
             # 학습 데이터와 검증 데이터셋을 호출합니다
+            # 학습데이터 준비
             train_data = pd.read_csv(self.train_path)
 
             # swap augmentation
             inv_train = train_data.iloc[:, [0, 1, 3, 2, 4, 5]]
             inv_train.columns = train_data.columns
+            # 단순 concat으로 인해 dataloader 단계에서 shuffle 필수
             train_data = pd.concat([train_data, inv_train], ignore_index=True)
 
             # 단순히 stack한거라 shuffle을 true로 하지 않으면 편향 생김
             # seed 고정 안하고 훈련시 shuffle 바뀌어서 성능이 변경되어버림
             train_data = pd.concat([train_data, train_data], ignore_index=True)
-            val_data = pd.read_csv(self.dev_path)
 
-            # 학습데이터 준비
             train_inputs, train_targets = self.preprocessing(train_data)
 
             # 검증데이터 준비
+            val_data = pd.read_csv(self.dev_path)
             val_inputs, val_targets = self.preprocessing(val_data)
 
-            # train 데이터만 shuffle을 적용해줍니다, 필요하다면 val, test 데이터에도 shuffle을 적용할 수 있습니다
             self.train_dataset = Dataset(train_inputs, train_targets)
             self.val_dataset = Dataset(val_inputs, val_targets)
         else:
@@ -116,8 +115,9 @@ class Dataloader(pl.LightningDataModule):
             self.predict_dataset = Dataset(predict_inputs, [])
 
     def train_dataloader(self):
+        # train 데이터만 shuffle을 적용해줍니다, 필요하다면 val, test 데이터에도 shuffle을 적용할 수 있습니다
         return torch.utils.data.DataLoader(
-            self.train_dataset, batch_size=self.batch_size, shuffle=self.shuffle
+            self.train_dataset, batch_size=self.batch_size, shuffle=True
         )
 
     def val_dataloader(self):

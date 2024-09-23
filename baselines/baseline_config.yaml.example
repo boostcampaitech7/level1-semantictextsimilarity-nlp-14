@@ -11,7 +11,6 @@ train:
   LossF: torch.nn.MSELoss 
   optim: torch.optim.AdamW
   ## LossF와 optim은 torch.nn과 torch.optim을 꼭 적어야 합니다
-  shuffle: True
   weight_decay: 0.01
   num_hiddens: 1
   dropout: 0.1

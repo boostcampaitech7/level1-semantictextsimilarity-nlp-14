@@ -5,6 +5,8 @@
 model.pt
 *.csv
 
+# local experiment notebook
+/experiment*.ipynb
 
 #./data/raw/*.csv
 

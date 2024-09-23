@@ -1,7 +1,6 @@
 ## Dictionary 형태
 
 admin: eyeol # 실험자 이름
-patience: 5 
 seed: 42
 train:
   model_name: snunlp/KR-ELECTRA-discriminator

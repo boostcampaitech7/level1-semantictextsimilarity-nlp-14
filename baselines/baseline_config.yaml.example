@@ -13,6 +13,7 @@ train:
   weight_decay: 0.01
   num_hiddens: 1
   dropout: 0.1
+  num_workers: 7
 LR_scheduler:
   num_warmup_rate: 0.1
   LR_step_type: step 

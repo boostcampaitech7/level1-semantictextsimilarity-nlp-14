@@ -1,7 +1,6 @@
 from tqdm import tqdm
 
-import torch
-import transformers
+import torch, transformers, os
 import pandas as pd
 import pytorch_lightning as pl
 
@@ -32,6 +31,9 @@ class Dataloader(pl.LightningDataModule):
         # config
         self.model_name = CFG["train"]["model_name"]
         self.batch_size = CFG["train"]["batch_size"]
+        self.num_workers = CFG["train"]["num_workers"]
+        # worker 간의 토크나이저 충돌 방지
+        os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
         self.train_path = train_path
         self.dev_path = dev_path
@@ -117,18 +119,29 @@ class Dataloader(pl.LightningDataModule):
     def train_dataloader(self):
         # train 데이터만 shuffle을 적용해줍니다, 필요하다면 val, test 데이터에도 shuffle을 적용할 수 있습니다
         return torch.utils.data.DataLoader(
-            self.train_dataset, batch_size=self.batch_size, shuffle=True
+            self.train_dataset,
+            batch_size=self.batch_size,
+            shuffle=True,
+            num_workers=self.num_workers,
         )
 
     def val_dataloader(self):
-        return torch.utils.data.DataLoader(self.val_dataset, batch_size=self.batch_size)
+        return torch.utils.data.DataLoader(
+            self.val_dataset,
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
+        )
 
     def test_dataloader(self):
         return torch.utils.data.DataLoader(
-            self.test_dataset, batch_size=self.batch_size
+            self.test_dataset,
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
         )
 
     def predict_dataloader(self):
         return torch.utils.data.DataLoader(
-            self.predict_dataset, batch_size=self.batch_size
+            self.predict_dataset,
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
         )

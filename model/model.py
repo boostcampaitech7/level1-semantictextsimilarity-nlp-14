@@ -1,4 +1,3 @@
-import torch
 import transformers
 import torchmetrics
 import pytorch_lightning as pl
@@ -18,12 +17,6 @@ class Model(pl.LightningModule):
         self.num_hiddens = CFG["train"]["num_hiddens"]
         self.num_warmup_rate = CFG["LR_scheduler"]["num_warmup_rate"]
 
-        # 단순한 선형 레이어를 추가해 모델의 학습과정에서 비선형성을 추가로 배울 수 있도록 함.
-        if self.num_hiddens != 1:
-            self.linear = nn.Linear(self.num_hiddens, 1)
-            self.gelu = nn.GELU()
-            self.dropout = nn.Dropout(CFG["train"]["dropout"])
-
         self.step = CFG["LR_scheduler"]["LR_step_type"]
         self.freq = CFG["LR_scheduler"]["LR_step_freq"]
 
@@ -35,6 +28,12 @@ class Model(pl.LightningModule):
         self.plm = transformers.AutoModelForSequenceClassification.from_pretrained(
             pretrained_model_name_or_path=self.model_name, num_labels=self.num_hiddens
         )
+
+        # 단순한 선형 레이어를 추가해 모델의 학습과정에서 비선형성을 추가로 배울 수 있도록 함.
+        if self.num_hiddens != 1:
+            self.gelu = nn.GELU()
+            self.dropout = nn.Dropout(CFG["train"]["dropout"])
+            self.linear = nn.Linear(self.num_hiddens, 1)
 
         # 현서님 의견
         # ForSequenceClassification 쓰면 num_labels=1로 linear layer 추가

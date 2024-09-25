@@ -51,10 +51,10 @@ class Model(pl.LightningModule):
         self.optim = eval(optim_choice)
         # self.optim은 configure_optimizers에서 사용
 
-    def forward(self, items):
-        input_ids = items["input_ids"]
-        attention_mask = items.get("attention_mask", None)
-        token_type_ids = items.get("token_type_ids", None)
+    def forward(self, input):
+        input_ids = input["input_ids"]
+        attention_mask = input.get("attention_mask", None)
+        token_type_ids = input.get("token_type_ids", None)
         x = self.plm(
             input_ids=input_ids,
             attention_mask=attention_mask,
@@ -71,7 +71,7 @@ class Model(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         y = batch["targets"]
-        logits = self(batch)
+        logits = self(input=batch)
         loss = self.loss_func(logits, y.float())
         self.log("train_loss", loss)
 
@@ -79,7 +79,7 @@ class Model(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         y = batch["targets"]
-        logits = self(batch)
+        logits = self(input=batch)
         loss = self.loss_func(logits, y.float())
         self.log("val_loss", loss)
 
@@ -92,7 +92,7 @@ class Model(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         y = batch["targets"]
-        logits = self(batch)
+        logits = self(input=batch)
 
         self.log(
             "test_pearson",
@@ -100,7 +100,7 @@ class Model(pl.LightningModule):
         )
 
     def predict_step(self, batch, batch_idx):
-        logits = self(batch)
+        logits = self(input=batch)
 
         return logits.squeeze()
 

@@ -112,7 +112,7 @@ class Dataloader(pl.LightningDataModule):
 
             predict_data = pd.read_csv(self.predict_path)
             predict_inputs, predict_targets = self.preprocessing(predict_data)
-            self.predict_dataset = Dataset(predict_inputs, [])
+            self.predict_dataset = Dataset(predict_inputs, predict_targets)
 
     def train_dataloader(self):
         # train 데이터만 shuffle을 적용해줍니다, 필요하다면 val, test 데이터에도 shuffle을 적용할 수 있습니다

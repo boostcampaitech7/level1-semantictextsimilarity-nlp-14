@@ -1,5 +1,6 @@
 import transformers
 import torchmetrics
+import torch  # eval로 torch import하는 부분에서 필요
 import pytorch_lightning as pl
 import torch.nn as nn
 from transformers import get_linear_schedule_with_warmup

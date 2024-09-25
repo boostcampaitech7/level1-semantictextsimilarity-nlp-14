@@ -20,9 +20,7 @@ from model.model import Model
 if __name__ == "__main__":
     # dataset path 설정
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--train_path", default="./data/custom/train_v1.0.2_clean_spacing.csv"
-    )
+    parser.add_argument("--train_path", default="./data/custom/test_argu.csv")
     parser.add_argument(
         "--dev_path", default="./data/custom/dev_v1.0.1_clean_spacing.csv"
     )

@@ -1,26 +1,33 @@
-from tqdm import tqdm
-
 import torch, transformers, os
+from transformers import DataCollatorWithPadding
 import pandas as pd
 import pytorch_lightning as pl
 
 
 class Dataset(torch.utils.data.Dataset):
-    def __init__(self, inputs, targets=[]):
-        self.inputs = inputs
-        self.targets = targets
+    def __init__(self, inputs, targets=None):
+        self.input_ids = inputs["input_ids"]
+        self.attention_mask = inputs["attention_mask"]
+        self.token_type_ids = inputs["token_type_ids"]
+        if targets is None:
+            self.targets = []
+        else:
+            self.targets = targets
 
     # 학습 및 추론 과정에서 데이터를 1개씩 꺼내오는 곳
     def __getitem__(self, idx):
-        # 정답이 있다면 else문을, 없다면 if문을 수행합니다
-        if len(self.targets) == 0:
-            return torch.tensor(self.inputs[idx])
-        else:
-            return torch.tensor(self.inputs[idx]), torch.tensor(self.targets[idx])
+        item = {
+            "input_ids": self.input_ids[idx],
+            "attention_mask": self.attention_mask[idx],
+            "token_type_ids": self.token_type_ids[idx],
+        }
+        if self.targets:
+            item["targets"] = self.targets[idx]
+        return item
 
     # 입력하는 개수만큼 데이터를 사용합니다
     def __len__(self):
-        return len(self.inputs)
+        return len(self.input_ids)
 
 
 # 나중에 Custom 가능
@@ -47,26 +54,17 @@ class Dataloader(pl.LightningDataModule):
         self.delete_columns = ["id"]
         self.text_columns = ["sentence_1", "sentence_2"]
 
+        self.collate_fn = DataCollatorWithPadding(self.tokenizer, padding=True)
+
     # tokenizing과 preprocessing은 나중에 Custom 가능
     def tokenizing(self, dataframe):
         # 어텐션 마스크 추가 안했으나, 추가시 성능 높아질 확률 높음
-        data = []
-        for idx, item in tqdm(
-            dataframe.iterrows(), desc="tokenizing", total=len(dataframe)
-        ):
-            # 두 입력 문장을 [SEP] 토큰으로 이어붙여서 전처리합니다.
-
-            text = [item[text_column] for text_column in self.text_columns]
-            outputs = self.tokenizer(
-                text[0],
-                text[1],
-                add_special_tokens=True,
-                padding="max_length",  # max_length로 패딩을 고정
-                truncation=True,  # 텍스트를 최대 길이로 자름
-                max_length=160,  # max_length 설정
-            )
-            data.append(outputs["input_ids"])
-        return data
+        outputs = self.tokenizer(
+            dataframe[self.text_columns[0]].tolist(),
+            dataframe[self.text_columns[1]].tolist(),
+            add_special_tokens=True,
+        )
+        return outputs
 
     def preprocessing(self, data):
         # 안쓰는 컬럼을 삭제합니다.
@@ -114,7 +112,7 @@ class Dataloader(pl.LightningDataModule):
 
             predict_data = pd.read_csv(self.predict_path)
             predict_inputs, predict_targets = self.preprocessing(predict_data)
-            self.predict_dataset = Dataset(predict_inputs, [])
+            self.predict_dataset = Dataset(predict_inputs, predict_targets)
 
     def train_dataloader(self):
         # train 데이터만 shuffle을 적용해줍니다, 필요하다면 val, test 데이터에도 shuffle을 적용할 수 있습니다
@@ -122,6 +120,7 @@ class Dataloader(pl.LightningDataModule):
             self.train_dataset,
             batch_size=self.batch_size,
             shuffle=True,
+            collate_fn=self.collate_fn,
             num_workers=self.num_workers,
         )
 
@@ -129,6 +128,7 @@ class Dataloader(pl.LightningDataModule):
         return torch.utils.data.DataLoader(
             self.val_dataset,
             batch_size=self.batch_size,
+            collate_fn=self.collate_fn,
             num_workers=self.num_workers,
         )
 
@@ -136,6 +136,7 @@ class Dataloader(pl.LightningDataModule):
         return torch.utils.data.DataLoader(
             self.test_dataset,
             batch_size=self.batch_size,
+            collate_fn=self.collate_fn,
             num_workers=self.num_workers,
         )
 
@@ -143,5 +144,6 @@ class Dataloader(pl.LightningDataModule):
         return torch.utils.data.DataLoader(
             self.predict_dataset,
             batch_size=self.batch_size,
+            collate_fn=self.collate_fn,
             num_workers=self.num_workers,
         )

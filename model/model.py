@@ -1,5 +1,6 @@
 import transformers
 import torchmetrics
+import torch  # eval로 torch import하는 부분에서 필요
 import pytorch_lightning as pl
 import torch.nn as nn
 from transformers import get_linear_schedule_with_warmup
@@ -62,7 +63,7 @@ class Model(pl.LightningModule):
             return x
 
     def training_step(self, batch, batch_idx):
-        x, y = batch
+        x, y = batch["input_ids"], batch["targets"]
         logits = self(x)
         loss = self.loss_func(logits, y.float())
         self.log("train_loss", loss)
@@ -70,7 +71,7 @@ class Model(pl.LightningModule):
         return loss
 
     def validation_step(self, batch, batch_idx):
-        x, y = batch
+        x, y = batch["input_ids"], batch["targets"]
         logits = self(x)
         loss = self.loss_func(logits, y.float())
         self.log("val_loss", loss)
@@ -83,7 +84,7 @@ class Model(pl.LightningModule):
         return loss
 
     def test_step(self, batch, batch_idx):
-        x, y = batch
+        x, y = batch["input_ids"], batch["targets"]
         logits = self(x)
 
         self.log(
@@ -92,7 +93,7 @@ class Model(pl.LightningModule):
         )
 
     def predict_step(self, batch, batch_idx):
-        x = batch
+        x = batch["input_ids"]
         logits = self(x)
 
         return logits.squeeze()

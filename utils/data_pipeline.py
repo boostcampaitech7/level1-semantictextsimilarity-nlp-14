@@ -1,5 +1,3 @@
-from tqdm import tqdm
-
 import torch, transformers, os
 import pandas as pd
 import pytorch_lightning as pl
@@ -50,23 +48,15 @@ class Dataloader(pl.LightningDataModule):
     # tokenizing과 preprocessing은 나중에 Custom 가능
     def tokenizing(self, dataframe):
         # 어텐션 마스크 추가 안했으나, 추가시 성능 높아질 확률 높음
-        data = []
-        for idx, item in tqdm(
-            dataframe.iterrows(), desc="tokenizing", total=len(dataframe)
-        ):
-            # 두 입력 문장을 [SEP] 토큰으로 이어붙여서 전처리합니다.
-
-            text = [item[text_column] for text_column in self.text_columns]
-            outputs = self.tokenizer(
-                text[0],
-                text[1],
-                add_special_tokens=True,
-                padding="max_length",  # max_length로 패딩을 고정
-                truncation=True,  # 텍스트를 최대 길이로 자름
-                max_length=160,  # max_length 설정
-            )
-            data.append(outputs["input_ids"])
-        return data
+        outputs = self.tokenizer(
+            dataframe[self.text_columns[0]].tolist(),
+            dataframe[self.text_columns[1]].tolist(),
+            add_special_tokens=True,
+            padding="max_length",  # max_length로 패딩을 고정
+            truncation=True,  # 텍스트를 최대 길이로 자름
+            max_length=160,  # max_length 설정
+        )
+        return outputs["input_ids"]
 
     def preprocessing(self, data):
         # 안쓰는 컬럼을 삭제합니다.

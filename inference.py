@@ -21,19 +21,11 @@ from utils import data_pipeline, tools
 if __name__ == "__main__":
     # dataset path 설정
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--train_path", default="./data/custom/train_v1.0.2_clean_spacing.csv"
-    )
-    parser.add_argument(
-        "--dev_path", default="./data/custom/dev_v1.0.1_clean_spacing.csv"
-    )
-    parser.add_argument(
-        "--test_path", default="./data/custom/dev_v1.0.1_clean_spacing.csv"
-    )
+    parser.add_argument("--train_path", default="./data/raw/train.csv")
+    parser.add_argument("--dev_path", default="./data/raw/dev.csv")
+    parser.add_argument("--test_path", default="./data/raw/dev.csv")
     ## test_path도 dev.csv로 설정 >> trainer.test()에서 dev.csv 사용
-    parser.add_argument(
-        "--predict_path", default="./data/custom/test_v1.0.1_clean_spacing.csv"
-    )
+    parser.add_argument("--predict_path", default="./data/raw/test.csv")
     ## predict_path에 test.csv로 설정 >> trainer.predict()에서 test.csv 사용
     args = parser.parse_args(args=[])
 

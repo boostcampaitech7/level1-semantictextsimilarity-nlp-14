@@ -1,0 +1,26 @@
+## Dictionary 형태
+
+admin: eyeol # 실험자 이름
+seed: 42
+train:
+  model_name: snunlp/KR-ELECTRA-discriminator
+  batch_size: 32
+  epoch: 1
+  LR: 0.00003
+  LossF: torch.nn.MSELoss 
+  optim: torch.optim.AdamW
+  ## LossF와 optim은 torch.nn과 torch.optim을 꼭 적어야 합니다
+  weight_decay: 0.01
+  num_hiddens: 1
+  dropout: 0.1
+  num_workers: 7
+LR_scheduler:
+  num_warmup_rate: 0.1
+  LR_step_type: step 
+  LR_step_freq: 1
+early_stopping:
+  monitor: val_loss
+  patience: 3
+  mode: min
+inference:
+  model_path: ./experiments/09-12_16_eyeol/model.pt

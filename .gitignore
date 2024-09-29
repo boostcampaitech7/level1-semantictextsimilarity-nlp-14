@@ -14,7 +14,7 @@ model.pt
 ./data/inference/*.csv
 
 # 
-## baseline_config.yaml
+baseline_config.yaml
 
 # lightning log
 lightning_logs

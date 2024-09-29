@@ -3,7 +3,7 @@
 STS 문장 유사도 측정을 위한 프로젝트입니다
 
 
-## 0. Description
+## Description
 - 프로젝트 기간 : 2024.09.10(화) ~ 2024.09.26(목)
 - 데이터셋
   * train set : 9,324개
@@ -14,22 +14,22 @@ STS 문장 유사도 측정을 위한 프로젝트입니다
 > 네이버 부스트캠프 AI Tech 7기 Level 1 프로젝트
 
 
-## 1. How to Start
+## How to Start
 
-### Clone Repository
+### 1. Clone Repository
 
 ```sh
 $ git clone https://github.com/boostcampaitech7/level1-semantictextsimilarity-nlp-14.git
 $ cd level1-semantictextsimilarity-nlp-14
 ```
 
-### Copy Config File
+### 2. Copy Config File
 
 ```sh 
 $ cp baselines/baseline_config.yaml.example baselines/baseline_config.yaml
 ```
 
-### Set Your Experiment Config
+### 3. Set Your Experiment Config
 `baseline_config.yaml`에서 원하는 세팅으로 수정하시면 됩니다
 
 ```yaml
@@ -59,7 +59,7 @@ inference:
   model_path: ./experiments/09-12_16_eyeol/model.pt    # this works in inference.py
 ```
 
-### Set python virtual environment
+### 4. Set python virtual environment
 root 폴더에서 다음 명령어를 실행
 ```sh
 $ conda env create -f environment.yaml
@@ -71,7 +71,7 @@ $ conda activate sts
 (sts) $                # 프롬프트 왼쪽에 (sts)가 생기면 성공
 ```
 
-### train.py 실행
+### 5. train.py 실행
 모델 학습을 위해 train.py를 실행합니다
 ```sh
 (sts) $ python train.py
@@ -80,7 +80,7 @@ $ conda activate sts
 학습이 끝나면, experiments 폴더에 학습된 모델이 저장됩니다
 
 
-### inference.py 실행
+### 6. inference.py 실행
 baseline_config.yaml에서 inference.model_path를
 학습된 모델의 경로로 수정해주세요
 
@@ -97,8 +97,7 @@ inference.py를 실행하면, 학습된 모델을 불러와서 output.csv를 출
 output.csv는 `./data/inference` 폴더에 저장됩니다
 
 
-
-## 2. Structure
+## Structure
 
 ```plaintext
 STS
@@ -123,7 +122,7 @@ STS
 >
 > 이전 기수의 baseline code를 참고해서 만들었습니다
 
-## 3. 활용 예시
+## 활용 예시
 
 
 ```plaintext
@@ -164,7 +163,7 @@ ex) tokenizer 교체 / hyperparameter 수정
 3. 다시 훈련 후 평가
 ```
 
-## 4. Collaborators
+## Collaborators
 
 <h3 align="center">NLP-14조 Word Maestro(s)</h3>
 

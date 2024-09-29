@@ -3,7 +3,7 @@
 STS 문장 유사도 측정을 위한 프로젝트입니다
 
 
-## Description
+## 0. Description
 - 프로젝트 기간 : 2024.09.10(화) ~ 2024.09.26(목)
 - 데이터셋
   * train set : 9,324개
@@ -14,7 +14,7 @@ STS 문장 유사도 측정을 위한 프로젝트입니다
 > 네이버 부스트캠프 AI Tech 7기 Level 1 프로젝트
 
 
-## How to Start
+## 1. How to Start
 
 ### Clone Repository
 
@@ -98,7 +98,7 @@ output.csv는 `./data/inference` 폴더에 저장됩니다
 
 
 
-## Structure
+## 2. Structure
 
 ```plaintext
 STS
@@ -123,7 +123,7 @@ STS
 >
 > 이전 기수의 baseline code를 참고해서 만들었습니다
 
-## 활용 예시
+## 3. 활용 예시
 
 
 ```plaintext
@@ -164,7 +164,7 @@ ex) tokenizer 교체 / hyperparameter 수정
 3. 다시 훈련 후 평가
 ```
 
-## Collaborators
+## 4. Collaborators
 
 <h3 align="center">NLP-14조 Word Maestro(s)</h3>
 

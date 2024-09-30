@@ -1,9 +1,103 @@
-# Semantic Text Similarity Baseline
+# Semantic Text Similarity Project
+
+STS 문장 유사도 측정을 위한 프로젝트입니다
+
+
+## Description
+- 프로젝트 기간 : 2024.09.10(화) ~ 2024.09.26(목)
+- 데이터셋
+  * train set : 9,324개
+  * dev set   : 550개
+  * test set  : 1,100개
+- 평가방법 : 피어슨 상관계수
+
+> 네이버 부스트캠프 AI Tech 7기 Level 1 프로젝트
+
+
+## How to Start
+
+### 1. Clone Repository
+
+```sh
+$ git clone https://github.com/boostcampaitech7/level1-semantictextsimilarity-nlp-14.git
+$ cd level1-semantictextsimilarity-nlp-14
+```
+
+### 2. Copy Config File
+
+```sh 
+$ cp baselines/baseline_config.yaml.example baselines/baseline_config.yaml
+```
+
+### 3. Set Your Experiment Config
+`baseline_config.yaml`에서 원하는 세팅으로 수정하시면 됩니다
+
+```yaml
+admin: admin                                     # your name
+seed: 42                                         
+train:
+  model_name: snunlp/KR-ELECTRA-discriminator    # model
+  batch_size: 32
+  epoch: 1
+  LR: 0.00003
+  LossF: torch.nn.MSELoss 
+  optim: torch.optim.AdamW
+  ## LossF와 optim은 torch.nn과 torch.optim을 꼭 적어야 합니다
+  weight_decay: 0.01
+  num_hiddens: 1
+  dropout: 0.1
+  num_workers: 7                                 # 사용하는 cpu core 숫자
+LR_scheduler:
+  num_warmup_rate: 0.1
+  LR_step_type: step 
+  LR_step_freq: 1
+early_stopping:
+  monitor: val_loss
+  patience: 3
+  mode: min
+inference:
+  model_path: ./experiments/09-12_16_eyeol/model.pt    # this works in inference.py
+```
+
+### 4. Set python virtual environment
+root 폴더에서 다음 명령어를 실행
+```sh
+$ conda env create -f environment.yaml
+```
+
+생성한 가상환경 실행
+```sh
+$ conda activate sts
+(sts) $                # 프롬프트 왼쪽에 (sts)가 생기면 성공
+```
+
+### 5. train.py 실행
+모델 학습을 위해 train.py를 실행합니다
+```sh
+(sts) $ python train.py
+```
+
+학습이 끝나면, experiments 폴더에 학습된 모델이 저장됩니다
+
+
+### 6. inference.py 실행
+baseline_config.yaml에서 inference.model_path를
+학습된 모델의 경로로 수정해주세요
+
+`baselines/baseline_config.yaml`:
+```yaml
+inference:
+  model_path: ./experiments/09-12_16_eyeol/model.pt
+```
+
+inference.py를 실행하면, 학습된 모델을 불러와서 output.csv를 출력합니다
+```sh
+(sts) $ python inference.py
+```
+output.csv는 `./data/inference` 폴더에 저장됩니다
+
 
 ## Structure
-
-https://github.com/boostcampaitech5/level1_semantictextsimilarity-nlp-06 <br/>
-전체 구조는 해당 깃허브를 참고하여 만들었습니다
 
 ```plaintext
 STS
@@ -24,8 +118,12 @@ STS
 
 ```
 
-## Description
-baseline 활용 예시입니다
+> https://github.com/boostcampaitech5/level1_semantictextsimilarity-nlp-06
+>
+> 이전 기수의 baseline code를 참고해서 만들었습니다
+
+## 활용 예시
+
 
 ```plaintext
 ## 훈련 ##
@@ -44,7 +142,7 @@ baseline 활용 예시입니다
 
 ## 예측 ## 
 
-1. inference.py의 line 40에서 불러올 모델 세팅합니다
+1. inference.py의 37 line에서 불러올 모델 세팅합니다
 
 2. inference.py 실행하여 output.csv를 출력합니다
 
@@ -64,3 +162,15 @@ ex) tokenizer 교체 / hyperparameter 수정
 
 3. 다시 훈련 후 평가
 ```
+
+## Collaborators
+
+<h3 align="center">NLP-14조 Word Maestro(s)</h3>
+
+<div align="center">
+
+|          [김현서](https://github.com/kimhyeonseo0830)          |          [단이열](https://github.com/eyeol)          |          [안혜준](https://github.com/jagaldol)          |          [이재룡](https://github.com/So1pi)          |          [장요한](https://github.com/DDUKDAE)          |
+| :----------------------------------------------------: | :-----------------------------------------------------: | :------------------------------------------------------: | :---------------------------------------------------: | :---------------------------------------------------: |
+| <img src="https://github.com/kimhyeonseo0830.png" width="100"> | <img src="https://github.com/eyeol.png" width="100"> | <img src="https://github.com/jagaldol.png" width="100"> | <img src="https://github.com/So1pi.png" width="100"> | <img src="https://github.com/DDUKDAE.png" width="100"> |
+
+</div>

@@ -59,7 +59,17 @@ inference:
   model_path: ./experiments/09-12_16_eyeol/model.pt    # this works in inference.py
 ```
 
-### 4. Set python virtual environment
+### 4. Prepare Dataset
+프로젝트를 시작하기 위해, 데이터를 data/raw 폴더에 넣어주세요.
+
+이 폴더는 원본 데이터를 저장하는 곳입니다.
+```plaintext
+data/raw/train.csv
+data/raw/dev.csv
+data/raw/test.csv
+```
+
+### 5. Set python virtual environment
 root 폴더에서 다음 명령어를 실행
 ```sh
 $ conda env create -f environment.yaml
@@ -71,7 +81,7 @@ $ conda activate sts
 (sts) $                # 프롬프트 왼쪽에 (sts)가 생기면 성공
 ```
 
-### 5. train.py 실행
+### 6. train.py 실행
 모델 학습을 위해 train.py를 실행합니다
 ```sh
 (sts) $ python train.py
@@ -80,7 +90,7 @@ $ conda activate sts
 학습이 끝나면, experiments 폴더에 학습된 모델이 저장됩니다
 
 
-### 6. inference.py 실행
+### 7. inference.py 실행
 baseline_config.yaml에서 inference.model_path를
 학습된 모델의 경로로 수정해주세요
 

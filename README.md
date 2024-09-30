@@ -60,7 +60,7 @@ inference:
 ```
 
 ### 4. Prepare Dataset
-프로젝트를 시작하기 위해, 데이터를 data/raw 폴더에 넣어주세요.
+프로젝트를 시작하기 위해, 데이터를 `data/raw` 폴더에 넣어주세요.
 
 이 폴더는 원본 데이터를 저장하는 곳입니다.
 ```plaintext
